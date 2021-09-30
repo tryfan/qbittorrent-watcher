@@ -1,0 +1,15 @@
+---
+version: "2.1"
+
+services:
+  qbittorrent-watcher:
+    image: ncelebic/qbittorrent-watcher
+    container_name: qbittorrent-watcher
+    environment:
+      - QBITTORRENT_HOST=127.0.0.1
+      - QBITTORRENT_PORT=8080
+      - QBITTORRENT_USERNAME=admin
+      - QBITTORRENT_PASSWORD=adminadmin
+      - QBITTORRENT_TRACKER_WHITELIST=bigtorrent,minitracker
+      - QBITTORRENT_RETRY_SECONDS=60
+      - QBITTORRENT_TESTING_MODE=1
