@@ -16,3 +16,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag qbittorrent-watcher:$(date +%s)
+    - name: Push to ghcr
+      uses: macbre/push-to-ghcr@v7
+      with:
+        github_token: ${{ secrets.GHCR_TOKEN }}
+        image_name: tryfan/qbittorrent-watcher
+        docker_io_token: ${{ secrets.DOCKER_TOKEN }}
+        
