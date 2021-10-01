@@ -1,9 +1,11 @@
 import qbittorrentapi
-from qbittorrentapi import torrents
+import logging
 import yaml
 from pathlib import Path
 from os import environ
 import time
+
+logging.basicConfig(level="INFO")
 
 cfg = {}
 config_file = Path("config.yml")
@@ -54,11 +56,11 @@ while True:
     if relogin or not qbitt_client.is_logged_in:
         try:
             qbitt_client.auth_log_in()
-            print(f'qBittorrent: {qbitt_client.app.version}')
-            print(f'qBittorrent Web API: {qbitt_client.app.web_api_version}')
+            logging.info(f'qBittorrent: {qbitt_client.app.version}')
+            logging.info(f'qBittorrent Web API: {qbitt_client.app.web_api_version}')
             relogin = False
         except Exception as e:
-            if qbittorrentapi.LoginFailed: print(e)
+            if qbittorrentapi.LoginFailed: logging.error(e)
             time.sleep(cfg['retry_seconds'])
             pass
     
@@ -72,13 +74,13 @@ while True:
                         whitelisted = True
                 if torrent.state_enum.is_complete and not whitelisted:
                     if not torrent.state_enum.is_paused:
-                        print(f'Pausing {torrent.name}')
+                        logging.info(f'Pausing {torrent.name}')
                         qbitt_client.torrents_pause(torrent_hashes=[torrent.info.hash])
                 if not torrent.state_enum.is_complete:
-                    print(f'{torrent.name} is still downloading')
+                    logging.info(f'{torrent.name} is still downloading')
             time.sleep(cfg['retry_seconds'])
         except Exception as e:
-            if qbittorrentapi.LoginFailed: print(e)
+            if qbittorrentapi.LoginFailed: logging.error(e)
             relogin = True
             pass
         
